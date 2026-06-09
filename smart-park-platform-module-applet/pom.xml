@@ -4,14 +4,28 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.mumu</groupId>
+    <!-- 继承 build 模块，才能拿到所有依赖版本号 -->
+    <parent>
+        <groupId>com.mumu</groupId>
+        <artifactId>smart-park-platform-build</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
+        <relativePath>../smart-park-platform-build/pom.xml</relativePath>
+    </parent>
+
     <artifactId>smart-park-platform-module-applet</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <packaging>jar</packaging>
+    <description>小程序首页模块</description>
 
-    <properties>
-        <maven.compiler.source>25</maven.compiler.source>
-        <maven.compiler.target>25</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    </properties>
-
+    <dependencies>
+        <!-- 依赖 common 模块 -->
+        <dependency>
+            <groupId>com.mumu</groupId>
+            <artifactId>smart-park-platform-module-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
