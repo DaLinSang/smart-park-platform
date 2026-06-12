@@ -22,6 +22,12 @@
             <artifactId>smart-park-platform-module-applet</artifactId>
         </dependency>
 
+        <!-- 依赖 base 模块 -->
+        <dependency>
+            <groupId>com.mumu</groupId>
+            <artifactId>smart-park-platform-module-base</artifactId>
+        </dependency>
+
         <!-- MySQL 驱动（运行时） -->
         <dependency>
             <groupId>com.mysql</groupId>
