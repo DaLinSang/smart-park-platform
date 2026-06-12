@@ -14,7 +14,7 @@ DROP TABLE IF EXISTS applet_tourist;
 CREATE TABLE applet_tourist
 (
     id           BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID',
-    park_id      VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '园区ID',
+    park_id      BIGINT       NOT NULL DEFAULT 0  COMMENT '园区ID',
     tourist_id   VARCHAR(128) NOT NULL DEFAULT '' COMMENT '访客ID(微信openid等)',
     tourist_type VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '访客类型',
     tourist_name VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '访客姓名',
@@ -43,9 +43,75 @@ CREATE TABLE applet_tourist
 -- ============================================
 INSERT INTO applet_tourist (park_id, tourist_id, tourist_type, tourist_name, phone, id_card,
                             visit_time, leave_time, reason, status, create_by)
-VALUES ('P001', 'wx_openid_001', '员工', '张三', '13800138001', '110101199001011234',
+VALUES ('1', 'wx_openid_001', '员工', '张三', '13800138001', '110101199001011234',
         '2026-06-09 09:00:00', '2026-06-09 18:00:00', '办公', 1, 'system'),
-       ('P001', 'wx_openid_002', '访客', '李四', '13800138002', '110101199002021235',
+       ('1', 'wx_openid_002', '访客', '李四', '13800138002', '110101199002021235',
         '2026-06-09 10:00:00', '2026-06-09 16:00:00', '商务会谈', 1, 'system'),
-       ('P002', 'wx_openid_003', '访客', '王五', '13800138003', '110101199003031236',
+       ('2', 'wx_openid_003', '访客', '王五', '13800138003', '110101199003031236',
         '2026-06-09 14:00:00', NULL, '参观', 0, 'system');
+
+
+
+-- ============================================
+-- base_park 园区表
+-- ============================================
+DROP TABLE IF EXISTS base_park;
+CREATE TABLE base_park
+(
+    id         BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID（雪花算法）',
+    park_name  VARCHAR(100)   NOT NULL DEFAULT '' COMMENT '园区名称',
+    address    VARCHAR(255)   NOT NULL DEFAULT '' COMMENT '园区详细地址',
+    longitude  DECIMAL(10, 7) NOT NULL DEFAULT 0 COMMENT '经度',
+    latitude   DECIMAL(10, 7) NOT NULL DEFAULT 0 COMMENT '纬度',
+    city       VARCHAR(50)    NOT NULL DEFAULT '' COMMENT '城市',
+
+    -- 公共审计字段
+    create_by   VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建人',
+    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新人',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted     TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除（0=正常，1=删除）',
+
+    INDEX idx_city (city),
+    INDEX idx_park_name (park_name)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='园区管理';
+
+-- ============================================
+-- base_building 楼栋表
+-- ============================================
+DROP TABLE IF EXISTS base_building;
+CREATE TABLE base_building
+(
+    id            BIGINT AUTO_INCREMENT PRIMARY KEY COMMENT '主键ID（雪花算法）',
+    park_id       BIGINT       NOT NULL DEFAULT 0 COMMENT '所属园区ID，关联 base_park.id',
+    building_name VARCHAR(100) NOT NULL DEFAULT '' COMMENT '楼栋名称',
+    floor_number  INT          NOT NULL DEFAULT 0 COMMENT '楼层层数',
+
+    -- 公共审计字段
+    create_by   VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建人',
+    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    update_by   VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新人',
+    update_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    deleted     TINYINT      NOT NULL DEFAULT 0 COMMENT '逻辑删除（0=正常，1=删除）',
+
+    INDEX idx_park_id (park_id),
+    INDEX idx_building_name (building_name)
+) ENGINE = InnoDB
+  DEFAULT CHARSET = utf8mb4 COMMENT ='楼栋管理';
+
+-- ============================================
+-- base 模块测试数据
+-- ============================================
+INSERT INTO base_park (park_name, address, longitude, latitude, city, create_by)
+VALUES ('未来科技园', '北京市海淀区中关村大街1号', 116.3267489, 39.9798765, '北京', 'system'),
+       ('张江高科技园', '上海市浦东新区张江路100号', 121.6146821, 31.2115768, '上海', 'system'),
+       ('深圳湾科技园', '深圳市南山区科技南路18号', 113.9512345, 22.5367890, '深圳', 'system');
+
+INSERT INTO base_building (park_id, building_name, floor_number, create_by)
+VALUES (1, 'A栋', 12, 'system'),
+       (1, 'B栋', 8, 'system'),
+       (1, 'C栋', 6, 'system'),
+       (2, '研发楼', 15, 'system'),
+       (2, '创新楼', 10, 'system'),
+       (3, '总部大楼', 20, 'system');

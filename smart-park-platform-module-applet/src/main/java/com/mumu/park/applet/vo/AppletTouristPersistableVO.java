@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
  */
 @Data
 public class AppletTouristPersistableVO {
-    private String parkId;
+    private Long parkId;
     private String touristId;
     private String touristType;
     private String touristName;

@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class AppletTouristEntity extends BaseDeletableEntity {
 
     //园区ID
-    private String parkId;
+    private Long parkId;
 
     //访客ID(微信openid等)
     private String touristId;

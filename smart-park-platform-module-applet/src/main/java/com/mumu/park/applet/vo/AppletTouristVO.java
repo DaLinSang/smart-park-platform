@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Data
 public class AppletTouristVO {
     private Long id;
-    private String parkId;
+    private Long parkId;
     private String touristId;
     private String touristType;
     private String touristName;
