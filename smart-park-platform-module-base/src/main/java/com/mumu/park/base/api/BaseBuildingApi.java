@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/base/building")
+@RequestMapping("base/baseBuilding")
 public interface BaseBuildingApi {
 
     /** 分页查询楼栋（可按园区ID筛选） */

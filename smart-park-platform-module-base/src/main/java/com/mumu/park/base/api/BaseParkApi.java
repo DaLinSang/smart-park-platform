@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("/api/base/park")
+@RequestMapping("base/basePark")
 public interface BaseParkApi {
 
     /** 分页查询园区列表 */
