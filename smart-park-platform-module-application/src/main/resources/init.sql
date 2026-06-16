@@ -115,3 +115,36 @@ VALUES (1, 'A栋', 12, 'system'),
        (2, '研发楼', 15, 'system'),
        (2, '创新楼', 10, 'system'),
        (3, '总部大楼', 20, 'system');
+
+
+
+-- t_user_openid：用户微信OpenID绑定表
+CREATE TABLE `t_user_openid` (
+                                 `id`          BIGINT       NOT NULL COMMENT '主键ID（雪花算法）',
+                                 `account_id`  VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '用户账号ID',
+                                 `openid`      VARCHAR(128) NOT NULL DEFAULT '' COMMENT '微信小程序openid',
+                                 `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                 `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                 `create_by`   VARCHAR(64)  DEFAULT '' COMMENT '创建人',
+                                 `update_by`   VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+                                 PRIMARY KEY (`id`),
+                                 INDEX `idx_openid` (`openid`),
+                                 INDEX `idx_account_id` (`account_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户微信OpenID绑定表';
+
+
+-- t_user_park：用户园区关联表
+CREATE TABLE `t_user_park` (
+                               `id`          BIGINT       NOT NULL COMMENT '主键ID（雪花算法）',
+                               `user_id`     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '用户主键ID',
+                               `park_id`     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '园区ID',
+                               `tenant_id`   VARCHAR(64)  DEFAULT '' COMMENT '租户ID',
+                               `deleted`     TINYINT(1)   DEFAULT 0  COMMENT '逻辑删除标记（0-未删，1-已删）',
+                               `create_time` DATETIME     DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               `update_time` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                               `create_by`   VARCHAR(64)  DEFAULT '' COMMENT '创建人',
+                               `update_by`   VARCHAR(64)  DEFAULT '' COMMENT '更新人',
+                               PRIMARY KEY (`id`),
+                               INDEX `idx_user_id` (`user_id`),
+                               INDEX `idx_park_id` (`park_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户园区关联表';
