@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.mumu.park.common.base.BaseDeletableEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 
@@ -11,6 +13,8 @@ import java.math.BigDecimal;
  * 园区管理实体 - base_park
  */
 @Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("base_park")
 public class BaseParkEntity extends BaseDeletableEntity {

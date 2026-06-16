@@ -3,9 +3,13 @@ package com.mumu.park.common.base;
 import com.baomidou.mybatisplus.annotation.TableLogic;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 
 @Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 public class BaseDeletableEntity extends BaseEntity {
 
