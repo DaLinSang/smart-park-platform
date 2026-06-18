@@ -183,3 +183,25 @@ VALUES
     ('applet', 'tourist', 'need_audit', 'true', '', 'admin', 'admin'),
     ('base', 'system', 'site_name', '智慧园区平台', '', 'admin', 'admin');
 
+
+
+-- ============================================
+-- t_base_file 附件表
+-- ============================================
+CREATE TABLE t_base_file (
+                             id              BIGINT AUTO_INCREMENT NOT NULL   COMMENT '主键ID',
+                             module_id       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '模块类型',
+                             module_data_id  VARCHAR(128) NOT NULL DEFAULT '' COMMENT '模块数据ID',
+                             file_id         VARCHAR(128) NOT NULL DEFAULT '' COMMENT '文件系统主键ID',
+                             name            VARCHAR(255) NOT NULL DEFAULT '' COMMENT '附件名称',
+                             path            VARCHAR(500) NOT NULL DEFAULT '' COMMENT '附件地址',
+                             extension_name  VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '文件扩展名',
+                             tenant_id       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '租户ID',
+                             create_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建者',
+                             create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                             update_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新者',
+                             update_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                             deleted         TINYINT      NOT NULL DEFAULT 0 COMMENT '删除标识',
+                             PRIMARY KEY (id),
+                             INDEX idx_module (module_id, module_data_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='附件表';
