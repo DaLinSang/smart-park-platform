@@ -117,8 +117,9 @@ VALUES (1, 'A栋', 12, 'system'),
        (3, '总部大楼', 20, 'system');
 
 
-
--- t_user_openid：用户微信OpenID绑定表
+-- ============================================
+-- -- t_user_openid 用户微信OpenID绑定表
+-- ============================================
 CREATE TABLE `t_user_openid` (
                                  `id`          BIGINT       NOT NULL COMMENT '主键ID（雪花算法）',
                                  `account_id`  VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '用户账号ID',
@@ -133,7 +134,9 @@ CREATE TABLE `t_user_openid` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户微信OpenID绑定表';
 
 
--- t_user_park：用户园区关联表
+-- ============================================
+-- t_user_park 用户园区关联表
+-- ============================================
 CREATE TABLE `t_user_park` (
                                `id`          BIGINT       NOT NULL COMMENT '主键ID（雪花算法）',
                                `user_id`     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '用户主键ID',
@@ -148,3 +151,35 @@ CREATE TABLE `t_user_park` (
                                INDEX `idx_user_id` (`user_id`),
                                INDEX `idx_park_id` (`park_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='用户园区关联表';
+
+
+
+-- ============================================
+-- t_config 各模块配置表
+-- ============================================
+CREATE TABLE t_config (
+                          id              BIGINT AUTO_INCREMENT NOT NULL   COMMENT '主键ID',
+                          module_name     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '配置所属模块',
+                          config_type     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '配置类型',
+                          config_key      VARCHAR(128) NOT NULL DEFAULT '' COMMENT '配置key',
+                          config_value    VARCHAR(500) NOT NULL DEFAULT '' COMMENT '配置value',
+                          config_extend   TEXT         COMMENT '扩展字段(JSON格式)',
+                          tenant_id       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '租户ID',
+                          create_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建者',
+                          create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                          update_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新者',
+                          update_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                          deleted         TINYINT      NOT NULL DEFAULT 0 COMMENT '删除标识：0未删除 1已删除',
+                          PRIMARY KEY (id),
+                          UNIQUE INDEX uk_config (module_name, config_type, config_key),
+                          INDEX idx_type (config_type)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='配置表';
+
+
+
+INSERT INTO t_config (module_name, config_type, config_key, config_value, tenant_id, create_by, update_by)
+VALUES
+    ('applet', 'tourist', 'max_days', '7', '', 'admin', 'admin'),
+    ('applet', 'tourist', 'need_audit', 'true', '', 'admin', 'admin'),
+    ('base', 'system', 'site_name', '智慧园区平台', '', 'admin', 'admin');
+
