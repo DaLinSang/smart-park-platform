@@ -245,3 +245,133 @@ CREATE TABLE t_base_process_user (
                                      PRIMARY KEY (id),
                                      INDEX idx_process (process_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='处理人员表';
+
+-- ============================================
+-- t_park_change 园区变更申请表
+-- ============================================
+CREATE TABLE t_park_change (
+                               id                      BIGINT AUTO_INCREMENT NOT NULL   COMMENT '主键ID',
+                               applicant_user_id       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '申请人ID',
+                               origin_park_id          VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '原所属园区ID',
+                               applying_park_id        VARCHAR(500) NOT NULL DEFAULT '' COMMENT '申请园区ID(逗号分隔，可申请多个)',
+                               role_id                 VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '角色ID',
+                               origin_department_id    VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '原部门ID',
+                               applying_department_id  VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '申请部门ID',
+                               reason                  VARCHAR(500) NOT NULL DEFAULT '' COMMENT '申请原因',
+                               approval_status         INT          NOT NULL DEFAULT 0 COMMENT '审批状态：0待审批 1流转中 2已审批 3已驳回',
+                               approved_park_id        VARCHAR(500) DEFAULT NULL COMMENT '已审批通过的园区ID',
+                               tenant_id               VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '租户ID',
+                               create_by               VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建者',
+                               create_time             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                               update_by               VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新者',
+                               update_time             DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                               deleted                 TINYINT      NOT NULL DEFAULT 0 COMMENT '删除标识',
+                               PRIMARY KEY (id),
+                               INDEX idx_applicant (applicant_user_id),
+                               INDEX idx_status (approval_status)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='园区变更申请表';
+
+
+-- ============================================
+-- 测试数据
+-- ============================================
+
+-- --------------------------------------------
+-- t_user_park 测试数据：用户园区关联
+-- --------------------------------------------
+INSERT INTO t_user_park (user_id, park_id, tenant_id, create_by, update_by)
+VALUES
+    ('user_001', '1', 'tenant_default', 'admin', 'admin'),
+    ('user_001', '2', 'tenant_default', 'admin', 'admin'),
+    ('user_002', '1', 'tenant_default', 'admin', 'admin'),
+    ('user_003', '3', 'tenant_default', 'admin', 'admin'),
+    ('user_004', '1', 'tenant_default', 'admin', 'admin'),
+    ('user_004', '2', 'tenant_default', 'admin', 'admin'),
+    ('user_004', '3', 'tenant_default', 'admin', 'admin');
+
+
+-- --------------------------------------------
+-- t_config 测试数据：各模块配置
+-- --------------------------------------------
+INSERT INTO t_config (module_name, config_type, config_key, config_value, config_extend, tenant_id, create_by, update_by)
+VALUES
+    -- base 模块配置（site_name 在前面已有，跳过避免重复）
+    ('base', 'system', 'site_logo', '/static/logo.png', NULL, 'tenant_default', 'admin', 'admin'),
+    ('base', 'system', 'copyright', '© 2026 Mumu Tech', NULL, 'tenant_default', 'admin', 'admin'),
+    -- park 模块配置
+    ('park', 'rule', 'max_visitor_days', '7', '{"unit":"day","desc":"访客最长访问天数"}', 'tenant_default', 'admin', 'admin'),
+    ('park', 'rule', 'need_audit', 'true', '{"desc":"是否需要审批"}', 'tenant_default', 'admin', 'admin'),
+    -- file 模块配置
+    ('file', 'upload', 'max_size_mb', '50', '{"unit":"MB","desc":"单文件最大大小"}', 'tenant_default', 'admin', 'admin'),
+    ('file', 'upload', 'allow_types', 'jpg,png,pdf,doc,xlsx', '{"desc":"允许的文件类型"}', 'tenant_default', 'admin', 'admin'),
+    -- process 模块配置
+    ('process', 'rule', 'timeout_hours', '24', '{"unit":"hour","desc":"审批超时时间"}', 'tenant_default', 'admin', 'admin');
+
+
+-- --------------------------------------------
+-- t_base_file 测试数据：附件信息
+-- --------------------------------------------
+INSERT INTO t_base_file (module_id, module_data_id, file_id, name, path, extension_name, tenant_id, create_by, update_by)
+VALUES
+    -- 园区变更申请附件（关联ParkChange的id=1,2）
+    ('parkChange', '1', 'file_20260623_001', '在职证明.pdf', '/upload/2026/06/在职证明_001.pdf', 'pdf', 'tenant_default', 'user_001', 'user_001'),
+    ('parkChange', '1', 'file_20260623_002', '身份证正面.jpg', '/upload/2026/06/身份证_001.jpg', 'jpg', 'tenant_default', 'user_001', 'user_001'),
+    ('parkChange', '1', 'file_20260623_003', '身份证反面.jpg', '/upload/2026/06/身份证_002.jpg', 'jpg', 'tenant_default', 'user_001', 'user_001'),
+    ('parkChange', '2', 'file_20260623_004', '调动申请表.docx', '/upload/2026/06/调动表_002.docx', 'docx', 'tenant_default', 'user_002', 'user_002'),
+    -- 游客访问附件（关联applet_tourist的id=1,2）
+    ('appletTourist', '1', 'file_20260623_005', '访客照片.png', '/upload/2026/06/访客_001.png', 'png', 'tenant_default', 'user_001', 'user_001'),
+    ('appletTourist', '2', 'file_20260623_006', '健康码截图.jpg', '/upload/2026/06/健康码_002.jpg', 'jpg', 'tenant_default', 'user_002', 'user_002');
+
+
+-- --------------------------------------------
+-- t_park_change 测试数据：园区变更申请
+-- --------------------------------------------
+INSERT INTO t_park_change (applicant_user_id, origin_park_id, applying_park_id, role_id,
+                            origin_department_id, applying_department_id, reason, approval_status,
+                            approved_park_id, tenant_id, create_by, update_by)
+VALUES
+    -- 待审批申请
+    ('user_001', '1', '2', 'role_employee', 'dept_tech', 'dept_product', '项目组调整，需要常驻张江园区', 0, NULL, 'tenant_default', 'user_001', 'user_001'),
+    -- 已审批通过
+    ('user_002', '1', '3', 'role_manager', 'dept_tech', 'dept_tech', '部门搬迁至深圳湾科技园', 2, '3', 'tenant_default', 'user_002', 'admin'),
+    -- 已驳回
+    ('user_003', '3', '1', 'role_employee', 'dept_operations', 'dept_tech', '希望转岗到技术部', 3, NULL, 'tenant_default', 'user_003', 'admin'),
+    -- 流转中（多园区申请）
+    ('user_004', '2', '1,3', 'role_employee', 'dept_product', 'dept_design', '设计部门多园区协同', 1, NULL, 'tenant_default', 'user_004', 'admin'),
+    -- 待审批
+    ('user_005', '1', '2', 'role_employee', 'dept_tech', 'dept_tech', '内部调岗到张江研发部', 0, NULL, 'tenant_default', 'user_005', 'user_005');
+
+
+-- --------------------------------------------
+-- t_base_process 测试数据：处理进度
+-- --------------------------------------------
+INSERT INTO t_base_process (module_data_id, action, action_name, tenant_id, create_by, update_by)
+VALUES
+    -- ParkChange id=1 的处理流程（3步审批）
+    ('1', 0, '提交申请', 'tenant_default', 'user_001', 'user_001'),
+    ('1', 3, '部门经理审批', 'tenant_default', 'mgr_001', 'mgr_001'),
+    ('1', 1, '园区管理员审批通过', 'tenant_default', 'admin', 'admin'),
+    -- ParkChange id=2 的处理流程
+    ('2', 0, '提交申请', 'tenant_default', 'user_002', 'user_002'),
+    ('2', 1, '已审批通过', 'tenant_default', 'admin', 'admin'),
+    -- ParkChange id=3 的处理流程
+    ('3', 0, '提交申请', 'tenant_default', 'user_003', 'user_003'),
+    ('3', 2, '已驳回', 'tenant_default', 'admin', 'admin');
+
+
+-- --------------------------------------------
+-- t_base_process_user 测试数据：处理人员
+-- --------------------------------------------
+INSERT INTO t_base_process_user (process_id, process_user_id, process_user_name, comment, created_time, create_by, update_by)
+VALUES
+    -- 申请1的处理人
+    (1, 'user_001', '张三', '申请从北京未来科技园调到张江高科技园', '2026-06-20 09:00:00', 'user_001', 'user_001'),
+    (2, 'mgr_001', '李经理', '同意部门内部调动', '2026-06-21 10:30:00', 'mgr_001', 'mgr_001'),
+    (2, 'user_001', '张三', '已收到部门经理审批意见', '2026-06-21 11:00:00', 'user_001', 'user_001'),
+    (3, 'admin', '系统管理员', '园区分配通过', '2026-06-22 14:00:00', 'admin', 'admin'),
+    -- 申请2的处理人
+    (4, 'user_002', '李四', '申请调到深圳湾科技园', '2026-06-18 09:00:00', 'user_002', 'user_002'),
+    (5, 'admin', '系统管理员', '审批通过，深圳湾园区已开通', '2026-06-19 16:00:00', 'admin', 'admin'),
+    -- 申请3的处理人
+    (6, 'user_003', '王五', '申请技术部转岗', '2026-06-15 09:00:00', 'user_003', 'user_003'),
+    (7, 'admin', '系统管理员', '技术部当前无空缺岗位，驳回', '2026-06-16 17:00:00', 'admin', 'admin');
