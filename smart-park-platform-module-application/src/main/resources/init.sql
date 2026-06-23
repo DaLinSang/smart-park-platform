@@ -205,3 +205,43 @@ CREATE TABLE t_base_file (
                              PRIMARY KEY (id),
                              INDEX idx_module (module_id, module_data_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='附件表';
+
+
+
+-- ============================================
+-- t_base_process 主表：处理进度表
+-- ============================================
+CREATE TABLE t_base_process (
+                                id              BIGINT AUTO_INCREMENT NOT NULL COMMENT '主键ID',
+                                module_data_id  VARCHAR(128) NOT NULL DEFAULT '' COMMENT '模块数据ID（关联的业务数据）',
+                                action          INT          NOT NULL DEFAULT 0 COMMENT '操作：0提交 1通过 2驳回 3流转',
+                                action_name     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '操作名称（如"部门经理审批"）',
+                                tenant_id       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '租户ID',
+                                deleted         TINYINT      NOT NULL DEFAULT 0 COMMENT '删除标识',
+                                create_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建者',
+                                create_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                update_by       VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新者',
+                                update_time     DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                PRIMARY KEY (id),
+                                INDEX idx_module_data (module_data_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='处理进度表';
+
+-- ============================================
+-- t_base_process_user 子表：处理人员表
+-- ============================================
+CREATE TABLE t_base_process_user (
+                                     id                BIGINT AUTO_INCREMENT NOT NULL COMMENT '主键ID',
+                                     process_id        BIGINT       NOT NULL COMMENT '处理进度ID（关联 t_base_process.id）',
+                                     process_user_id   VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '处理人ID',
+                                     process_user_name VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '处理人姓名',
+                                     comment           VARCHAR(500) NOT NULL DEFAULT '' COMMENT '处理意见',
+                                     created_time      DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '处理时间',
+                                     extend            TEXT         COMMENT '扩展字段(JSON)',
+                                     create_by         VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '创建者',
+                                     create_time       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                     update_by         VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '更新者',
+                                     update_time       DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+                                     deleted           TINYINT      NOT NULL DEFAULT 0 COMMENT '删除标识',
+                                     PRIMARY KEY (id),
+                                     INDEX idx_process (process_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='处理人员表';
