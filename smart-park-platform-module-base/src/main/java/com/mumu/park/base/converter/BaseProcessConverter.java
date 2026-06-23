@@ -1,8 +1,8 @@
 package com.mumu.park.base.converter;
 
 import com.mumu.park.base.entities.BaseProcessEntity;
-import com.mumu.park.base.entities.BaseProcessUserEntity;
-import com.mumu.park.base.vo.*;
+import com.mumu.park.base.vo.BaseProcessPersistableVO;
+import com.mumu.park.base.vo.BaseProcessVO;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -14,8 +14,6 @@ public interface BaseProcessConverter {
      */
     BaseProcessPersistableVO toPersistableVO(BaseProcessEntity entity);
 
-    BaseProcessAuditableVO toAuditableVO(BaseProcessEntity entity);
-
     /**
      * VO → Entity（新增）
      */
@@ -24,10 +22,6 @@ public interface BaseProcessConverter {
     /**
      * VO + id → Entity（更新）
      */
-    @Mapping(target = "id",source = "id")
+    @Mapping(target = "id", source = "id")
     BaseProcessEntity toEntity(Long id, BaseProcessVO vo);
-
-    BaseProcessUserPersistableVO toUserPersistableVO(BaseProcessUserEntity entity);
-
-    BaseProcessUserEntity toUserEntity(BaseProcessUserVO vo);
 }
