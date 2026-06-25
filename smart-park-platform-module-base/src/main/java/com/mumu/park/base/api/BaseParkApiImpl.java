@@ -36,6 +36,11 @@ public class BaseParkApiImpl implements BaseParkApi {
     }
 
     @Override
+    public R<List<BaseParkVO>> getUserParks(String userId) {
+        return R.success(baseParkService.getUserParks(userId));
+    }
+
+    @Override
     public R<BaseParkVO> create(BaseParkPersistableVO vo) {
         return R.success(baseParkService.create(vo));
     }

@@ -6,7 +6,7 @@ import com.mumu.park.applet.vo.AppletTouristAuditableVO;
 import com.mumu.park.applet.vo.AppletTouristPersistableVO;
 import com.mumu.park.applet.vo.AppletTouristVO;
 import org.mapstruct.Mapper;
-import org.mapstruct.factory.Mappers;
+
 
 /**
  * 用 MapStruct 做 Entity ↔ VO 转换，这是一个 强类型 的转换方案

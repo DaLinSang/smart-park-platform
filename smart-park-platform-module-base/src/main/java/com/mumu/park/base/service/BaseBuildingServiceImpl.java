@@ -20,12 +20,15 @@ public class BaseBuildingServiceImpl implements BaseBuildingService {
     private final BaseBuildingConverter baseBuildingConverter;
 
     @Override
-    public List<BaseBuildingVO> listByPage(int page, int size, Long parkId) {
+    public List<BaseBuildingVO> listByPage(int page, int size, String parkId, String buildingName) {
         // 先不分页，全部展示
         // 根据parkId查询，进行分页展示，若未填写parkId，则查询全部
         LambdaQueryWrapper<BaseBuildingEntity> wrapper = new LambdaQueryWrapper<>();
-        if (parkId != null){
+        if (parkId != null && !parkId.isEmpty()) {
             wrapper.eq(BaseBuildingEntity::getParkId, parkId);
+        }
+        if (buildingName != null && !buildingName.isEmpty()) {
+            wrapper.like(BaseBuildingEntity::getBuildingName, buildingName);
         }
         return baseBuildingRepository
                 .selectList(wrapper)

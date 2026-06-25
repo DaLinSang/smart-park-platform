@@ -15,4 +15,7 @@ public class UserParkPersistableVO extends UserParkAuditableVO{
      * 主键ID
      */
     private Long id;
+
+    /** 园区名称（联表查询填充） */
+    private String parkName;
 }

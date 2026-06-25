@@ -15,6 +15,9 @@ public class BaseProcessUserVO implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
 
+    /** 处理进度ID */
+    private String processId;
+
     /** 处理人ID */
     private String processUserId;
 

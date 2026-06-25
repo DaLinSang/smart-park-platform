@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface BaseBuildingService {
 
-    /** 分页查询楼栋（可按园区筛选） */
-    List<BaseBuildingVO> listByPage(int page, int size, Long parkId);
+    /** 分页查询楼栋（可按园区筛选 + 楼栋名称模糊搜索） */
+    List<BaseBuildingVO> listByPage(int page, int size, String parkId, String buildingName);
 
     /** 根据ID查询 */
     BaseBuildingVO getById(Long id);

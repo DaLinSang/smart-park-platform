@@ -17,6 +17,9 @@ public interface BaseParkService {
     /** 根据ID查询园区 */
     BaseParkVO getById(Long id);
 
+    /** 根据用户ID查询所属园区列表（联查 t_user_park） */
+    List<BaseParkVO> getUserParks(String userId);
+
     /** 新增园区 */
     BaseParkVO create(BaseParkPersistableVO vo);
 

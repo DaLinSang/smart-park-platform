@@ -29,6 +29,12 @@ public interface UserParkApi {
     R<List<UserParkPersistableVO>> getByUserId(@PathVariable String userId);
 
     /**
+     * 根据用户ID 查询关联的园区列表（带园区名称）
+     */
+    @GetMapping("/getByUserIdWithParkName/{userId}")
+    R<List<UserParkPersistableVO>> getByUserIdWithParkName(@PathVariable String userId);
+
+    /**
      * 新增关联
      */
     @PostMapping

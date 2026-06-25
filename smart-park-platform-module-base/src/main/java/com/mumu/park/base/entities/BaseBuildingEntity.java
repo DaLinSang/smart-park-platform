@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 public class BaseBuildingEntity extends BaseDeletableEntity {
 
     /** 所属园区ID，关联 base_park.id */
-    private Long parkId;
+    private String parkId;
 
     /** 楼栋名称 */
     private String buildingName;

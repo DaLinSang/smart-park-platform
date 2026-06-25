@@ -46,6 +46,11 @@ public class UserParkApiImpl implements UserParkApi {
     }
 
     @Override
+    public R<List<UserParkPersistableVO>> getByUserIdWithParkName(String userId) {
+        return R.success(userParkService.getByUserIdWithParkName(userId));
+    }
+
+    @Override
     public R<Long> add(UserParkVO vo) {
         UserParkEntity entity = userParkConverter.toEntity(vo);
         userParkService.save(entity);

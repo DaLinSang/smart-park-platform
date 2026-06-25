@@ -1,15 +1,16 @@
 package com.mumu.park.base.vo;
 
 import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Data
-public class BaseParkPersistableVO {
-    private String parkName;
-    private String address;
-    private BigDecimal longitude;
-    private BigDecimal latitude;
-    private String city;
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+public class BaseParkPersistableVO extends BaseParkAuditableVO {
 
+    /** 主键ID */
+    private Long id;
 }

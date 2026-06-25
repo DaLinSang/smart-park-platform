@@ -14,7 +14,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
-public class UserOpenidPersistableVO extends UserOpenidVO{
+public class UserOpenidPersistableVO extends UserOpenidAuditableVO {
 
     /**
      * 主键ID

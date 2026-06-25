@@ -10,11 +10,12 @@ import java.util.List;
 @RequestMapping("base/baseBuilding")
 public interface BaseBuildingApi {
 
-    /** 分页查询楼栋（可按园区ID筛选） */
+    /** 分页查询楼栋（可按园区ID筛选 + 楼栋名称模糊搜索） */
     @GetMapping("/list")
     R<List<BaseBuildingVO>> listByPage(@RequestParam(defaultValue = "1") int page,
-                                       @RequestParam(defaultValue = "10") int size,
-                                       @RequestParam(required = false) Long parkId);
+                                      @RequestParam(defaultValue = "10") int size,
+                                      @RequestParam(required = false) String parkId,
+                                      @RequestParam(required = false) String buildingName);
 
     /** 根据ID查询楼栋 */
     @GetMapping("/{id}")

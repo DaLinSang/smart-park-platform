@@ -16,8 +16,8 @@ public class BaseBuildingApiImpl implements BaseBuildingApi {
     private final BaseBuildingService baseBuildingService;
 
     @Override
-    public R<List<BaseBuildingVO>> listByPage(int page, int size, Long parkId) {
-        return R.success(baseBuildingService.listByPage(page, size, parkId));
+    public R<List<BaseBuildingVO>> listByPage(int page, int size, String parkId, String buildingName) {
+        return R.success(baseBuildingService.listByPage(page, size, parkId, buildingName));
     }
 
     @Override

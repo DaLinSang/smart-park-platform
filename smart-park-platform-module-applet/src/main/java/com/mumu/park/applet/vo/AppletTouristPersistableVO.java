@@ -1,21 +1,19 @@
 package com.mumu.park.applet.vo;
 
 import lombok.Data;
-import java.time.LocalDateTime;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 /**
- * 游客信息 - 新增/修改
+ * 游客信息 - 持久化VO（查询返回时用，带主键）
  */
 @Data
-public class AppletTouristPersistableVO {
-    private Long parkId;
-    private String touristId;
-    private String touristType;
-    private String touristName;
-    private String phone;
-    private String idCard;
-    private LocalDateTime visitTime;
-    private LocalDateTime leaveTime;
-    private String reason;
-    private Integer status;
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
+@EqualsAndHashCode(callSuper = true)
+public class AppletTouristPersistableVO extends AppletTouristAuditableVO {
+
+    /** 主键ID */
+    private Long id;
 }

@@ -23,6 +23,10 @@ public interface BaseParkApi {
     @GetMapping("/{id}")
     R<BaseParkVO> getById(@PathVariable Long id);
 
+    /** 根据用户ID查询所属园区列表 */
+    @GetMapping("/getUserParks/{userId}")
+    R<List<BaseParkVO>> getUserParks(@PathVariable String userId);
+
     /** 新增园区 */
     @PostMapping
     R<BaseParkVO> create(@RequestBody BaseParkPersistableVO vo);

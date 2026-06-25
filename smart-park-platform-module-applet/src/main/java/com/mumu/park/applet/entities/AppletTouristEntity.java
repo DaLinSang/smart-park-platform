@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.mumu.park.common.base.BaseDeletableEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
@@ -13,12 +15,14 @@ import java.time.LocalDateTime;
  */
 
 @Data
+@NoArgsConstructor
+@SuperBuilder(toBuilder = true)
 @EqualsAndHashCode(callSuper = true)
 @TableName("applet_tourist")
 public class AppletTouristEntity extends BaseDeletableEntity {
 
     //园区ID
-    private Long parkId;
+    private String parkId;
 
     //访客ID(微信openid等)
     private String touristId;

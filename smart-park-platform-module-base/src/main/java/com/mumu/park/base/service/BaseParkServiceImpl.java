@@ -11,6 +11,7 @@ import com.mumu.park.base.vo.BaseParkVO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 
@@ -21,6 +22,7 @@ public class BaseParkServiceImpl implements BaseParkService {
     private final BaseParkRepository baseParkRepository;
     private final BaseBuildingRepository baseBuildingRepository;
     private final BaseParkConverter baseParkConverter;
+    private final UserParkService userParkService;
 
     @Override
     public List<BaseParkVO> listByPage(int page, int size) {
@@ -57,6 +59,25 @@ public class BaseParkServiceImpl implements BaseParkService {
     }
 
     @Override
+    public List<BaseParkVO> getUserParks(String userId) {
+        // 1. 查询用户关联的园区ID列表
+        List<com.mumu.park.base.entities.UserParkEntity> userParks = userParkService.getByUserId(userId);
+        if (userParks.isEmpty()) {
+            return Collections.emptyList();
+        }
+        // 2. 提取parkId并去重
+        List<Long> parkIds = userParks.stream()
+                .map(up -> Long.valueOf(up.getParkId()))
+                .distinct()
+                .toList();
+        // 3. 根据ID列表查询园区
+        List<BaseParkEntity> entities = baseParkRepository.selectBatchIds(parkIds);
+        return entities.stream()
+                .map(baseParkConverter::toVO)
+                .toList();
+    }
+
+    @Override
     public BaseParkVO create(BaseParkPersistableVO vo) {
         //先将前端传来的VO数据转换成entity实体
         BaseParkEntity entity = baseParkConverter.toEntity(vo);
@@ -85,7 +106,7 @@ public class BaseParkServiceImpl implements BaseParkService {
 
         // eq 即为等于，getParkId()是楼栋实体类里面的parkId字段的get方法，第二个id是接口传进来的待删除园区的id
         // 整句话可以直接翻译为 WHERE park_id = #{园区id}
-        wrapper.eq(BaseBuildingEntity::getParkId, id);
+        wrapper.eq(BaseBuildingEntity::getParkId, String.valueOf(id));
 
         // 现在使用wrapper，按条件统计数据条数
         // 相当于一层SQL的嵌套，完整执行的SQL是：
